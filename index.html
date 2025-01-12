@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ontario Top 6 Average Calculator</title>
+
+  <!-- Google Font: Roboto -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+  <!-- Link to external CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-container">
+    <!-- ========== LEFT SIDE (70%) ========== -->
+    <div class="left-panel">
+      <div class="container">
+        <h1>Top 6 Average Calculator</h1>
+        
+        <!-- MHF4U -->
+        <label for="mhf4u">MHF4U Mark (%)</label>
+        <div class="input-with-button">
+          <input type="number" id="mhf4u" placeholder="MHF4U mark" min="0" max="100">
+          <button class="classAverageBtn" data-course="mhf4u">Calculate Class Avg</button>
+        </div>
+        
+        <!-- MCV4U -->
+        <label for="mcv4u">MCV4U Mark (%)</label>
+        <div class="input-with-button">
+          <input type="number" id="mcv4u" placeholder="MCV4U mark" min="0" max="100">
+          <button class="classAverageBtn" data-course="mcv4u">Calculate Class Avg</button>
+        </div>
+
+        <!-- SPH4U -->
+        <label for="sph4u">SPH4U Mark (%)</label>
+        <div class="input-with-button">
+          <input type="number" id="sph4u" placeholder="SPH4U mark" min="0" max="100">
+          <button class="classAverageBtn" data-course="sph4u">Calculate Class Avg</button>
+        </div>
+
+        <!-- SCH4U -->
+        <label for="sch4u">SCH4U Mark (%)</label>
+        <div class="input-with-button">
+          <input type="number" id="sch4u" placeholder="SCH4U mark" min="0" max="100">
+          <button class="classAverageBtn" data-course="sch4u">Calculate Class Avg</button>
+        </div>
+
+        <!-- ENG4U -->
+        <label for="eng4u">ENG4U Mark (%)</label>
+        <div class="input-with-button">
+          <input type="number" id="eng4u" placeholder="ENG4U mark" min="0" max="100">
+          <button class="classAverageBtn" data-course="eng4u">Calculate Class Avg</button>
+        </div>
+
+        <!-- 4U Elective -->
+        <label for="electiveName">4U Elective Course Name</label>
+        <input type="text" id="electiveName" placeholder="e.g. ICS4U, MDM4U, etc.">
+
+        <label for="electiveMark">Elective Mark (%)</label>
+        <div class="input-with-button">
+          <input type="number" id="electiveMark" placeholder="Elective mark" min="0" max="100">
+          <button class="classAverageBtn" data-course="electiveMark">Calculate Class Avg</button>
+        </div>
+        
+        <!-- Calculate Button for Top 6 -->
+        <button id="calcButton">Calculate Average</button>
+        <div id="result" class="result"></div>
+
+        <!-- "What If" Feature -->
+        <button id="whatIfButton">Try "What If" Scenario</button>
+        <div class="note">
+          <p>Your marks are auto-saved in this browser, so you can come back later!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== RIGHT SIDE (30%) ========== -->
+    <div class="right-panel">
+      <!-- Place the circle in the top 50% -->
+      <div class="circle-container">
+        <svg class="progress-ring" id="progressRing" width="300" height="300">
+          <!-- Background circle -->
+          <circle
+            class="ring-bg"
+            cx="150"
+            cy="150"
+            r="120"
+            stroke-width="15"
+            fill="black"
+            stroke="#3b3b3b">
+          </circle>
+
+          <!-- Foreground circle (white stroke that “fills”) -->
+          <circle
+            class="ring-fg"
+            id="ringFg"
+            cx="150"
+            cy="150"
+            r="120"
+            stroke-width="15"
+            fill="none"
+            stroke="#fff"
+            stroke-linecap="round"
+            stroke-dasharray="753.98"
+            stroke-dashoffset="753.98">
+          </circle>
+
+          <!-- Center text (the average) -->
+          <text
+            id="ringText"
+            x="50%"
+            y="50%"
+            text-anchor="middle"
+            fill="#fff"
+            font-size="36"
+            font-family="Roboto"
+            alignment-baseline="middle"
+            dominant-baseline="middle">
+            0%
+          </text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== "What If" Modal ========== -->
+  <div id="whatIfModal" class="modal">
+    <div class="modal-content">
+      <span id="closeModal" class="close">&times;</span>
+      <h2>What If Scenario</h2>
+      <label for="courseSelect">Course to change:</label>
+      <select id="courseSelect">
+        <option value="mhf4u">MHF4U</option>
+        <option value="mcv4u">MCV4U</option>
+        <option value="sph4u">SPH4U</option>
+        <option value="sch4u">SCH4U</option>
+        <option value="eng4u">ENG4U</option>
+        <option value="electiveMark">Elective</option>
+      </select>
+
+      <label for="newMark">New Mark (%)</label>
+      <input type="number" id="newMark" min="0" max="100" placeholder="Enter new hypothetical mark">
+
+      <button id="calcWhatIf">Calculate Hypothetical Average</button>
+      <div id="whatIfResult" class="what-if-result"></div>
+    </div>
+  </div>
+
+  <!-- ========== "Class Average" Modal ========== -->
+  <div id="classModal" class="modal">
+    <div class="modal-content">
+      <span id="classModalClose" class="close">&times;</span>
+      <h2 id="classModalTitle">Class Average Calculator</h2>
+      <p>Add your assessments below (category, points, etc.) and calculate your overall average.</p>
+      
+      <!-- Table for assessments -->
+      <table id="assessmentsTable">
+        <thead>
+          <tr>
+            <th>Assessment Name</th>
+            <th>Category</th>
+            <th>% Score (optional)</th>
+            <th>Pts Scored</th>
+            <th>Total Pts</th>
+            <th>Weight</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Rows get dynamically inserted here -->
+        </tbody>
+      </table>
+
+      <!-- Add row button -->
+      <button id="addAssessmentBtn">Add Assessment</button>
+      <!-- Calculate class average button -->
+      <button id="calcClassBtn">Calculate</button>
+      <!-- Button to use the computed average for the course -->
+      <button id="useAverageBtn" style="display:none;">Use This Average</button>
+
+      <!-- Display the result of the class average -->
+      <div id="classResult" class="what-if-result" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <!-- Link to external JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
